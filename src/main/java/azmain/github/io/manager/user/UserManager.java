@@ -7,10 +7,15 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import azmain.github.io.bean.network.RequestBean;
 import azmain.github.io.bean.network.ResponseBean;
+import azmain.github.io.bean.user.UserBean;
+import azmain.github.io.helper.PasswordHelper;
 import azmain.github.io.model.user.User;
+
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Query;
+import javax.servlet.http.HttpServletRequest;
 
 public class UserManager {
 	
@@ -55,7 +60,7 @@ public class UserManager {
             tx = session.beginTransaction();
 
             User user = new User();
-            user.setCreatedAt(requestBean.getUserBean().getCreatedAt());
+            user.setCreatedAt(new Date());
             user.setUsername(requestBean.getUserBean().getUsername());
             user.setCreatedBy(requestBean.getUserBean().getCreatedBy());
             user.setEmail(requestBean.getUserBean().getEmail());
@@ -83,5 +88,65 @@ public class UserManager {
         return responseBean;
 		
 	}
+	
+	
+	public ResponseBean registrationUser(HttpServletRequest httpServletRequest, EntityManagerFactory entityManagerFactory, UserBean userBean) {
+		ResponseBean responseBean = new ResponseBean();
+		
+		SessionFactory sessionFactory = entityManagerFactory.unwrap(SessionFactory.class);
+		Session session = null;
+		Transaction tx = null;
+		
+		try {
+			session = sessionFactory.openSession();
+			tx = session.beginTransaction();
+			
+			Query query = session.createNativeQuery("SELECT count(id) from User WHERE email = :userMail");
+			query.setParameter("userMail", userBean.getEmail());
+			System.out.println("GO");
+			System.out.println(query.getResultList().get(0).toString());
+			if(query.getResultList().get(0).toString().equals("0")) {
+				User user = new User();
+				user.setEmail(userBean.getEmail());
+				user.setUsername(userBean.getUsername());
+				user.setIsApproved(userBean.getIsApproved());
+				user.setPassword(PasswordHelper.encryptPassword(userBean.getPassword()));
+				user.setCreatedAt(new Date());
+				user.setIp(httpServletRequest.getLocalAddr());
+				user.setCreatedBy(userBean.getCreatedBy());
+				user.setModifiedAt(new Date());
+				user.setModifiedBy(userBean.getModifiedBy());
+				user.setToken(userBean.getToken());
+				
+				session.save(user);
+				
+				
+				responseBean.setCode(200);
+				responseBean.setMsg("User Registration Completed. Please Verify Your Email.");
+			}
+			else {
+				responseBean.setCode(200);
+				responseBean.setMsg("The User Email Already Exists!");
+			}
+			
+			
+			tx.commit();
+		} catch (Exception e) {
+			if(tx != null) {
+				tx.rollback();
+			}
+			responseBean.setCode(200);
+			responseBean.setMsg("Exception Occured.");
+		} finally {
+			if(session != null) {
+				session.close();
+			}
+		}
+		
+		return responseBean;
+	}
+	
+	
+	
 	
 }
