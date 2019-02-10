@@ -89,7 +89,7 @@ public class UserManager {
 		
 	}
 	
-	
+	/* New User Registration */
 	public ResponseBean registrationUser(HttpServletRequest httpServletRequest, EntityManagerFactory entityManagerFactory, UserBean userBean) {
 		ResponseBean responseBean = new ResponseBean();
 		
@@ -109,15 +109,21 @@ public class UserManager {
 				User user = new User();
 				user.setEmail(userBean.getEmail());
 				user.setUsername(userBean.getUsername());
+				user.setIsActive(userBean.getIsActive());
 				user.setIsApproved(userBean.getIsApproved());
 				user.setPassword(PasswordHelper.encryptPassword(userBean.getPassword()));
-				user.setCreatedAt(new Date());
+				user.setToken(userBean.getToken());
 				user.setIp(httpServletRequest.getLocalAddr());
 				user.setCreatedBy(userBean.getCreatedBy());
-				user.setModifiedAt(new Date());
 				user.setModifiedBy(userBean.getModifiedBy());
-				user.setToken(userBean.getToken());
-				
+				user.setCreatedAt(new Date());
+				user.setModifiedAt(new Date());
+				user.setLastLogin((new Date()).toString());
+				System.out.println(userBean.getEmail());
+				System.out.println(userBean.getPassword());
+				System.out.println(userBean.getUsername());
+				System.out.println(userBean.getCreatedAt());
+				System.out.println(userBean.getModifiedAt());
 				session.save(user);
 				
 				
@@ -128,7 +134,6 @@ public class UserManager {
 				responseBean.setCode(200);
 				responseBean.setMsg("The User Email Already Exists!");
 			}
-			
 			
 			tx.commit();
 		} catch (Exception e) {

@@ -8,9 +8,11 @@ public class UserBean {
 	private String email;
 	private String username;
 	private String password;
+	private String cpassword;
 	private int isActive;
 	public int isApproved;
 	private String token;
+
 	private String ip;
 	private int modifiedBy;
 	private int createdBy;
@@ -34,7 +36,16 @@ public class UserBean {
 		this.id = id;
 	}
 
+	public String getCpassword() {
+		return cpassword;
+	}
 
+
+	public void setCpassword(String cpassword) {
+		this.cpassword = cpassword;
+	}
+	
+	
 	public String getEmail() {
 		return email;
 	}

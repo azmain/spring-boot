@@ -22,25 +22,34 @@ public class User {
 	private String username;
     @NotNull
 	private String password;
-    @Column(columnDefinition="default 0",nullable = false)
+    
+//    @Column(columnDefinition="default 0",nullable = false)
 	private int isActive;
-    @Column(columnDefinition="default 0",nullable = false)
+    
+//    @Column(columnDefinition="default 0",nullable = false)
 	public int isApproved;
-    @Column(columnDefinition="default xyz",nullable = false)
+    
+//    @Column(columnDefinition="default xyz",nullable = false)
 	private String token;
+    
 	private String ip;
-	@Column(columnDefinition="default 0",nullable = false)
+	
+//	@Column(columnDefinition="default 0",nullable = false)
 	private int modifiedBy;
-	@Column(columnDefinition="default 0",nullable = false)
+	
+//	@Column(columnDefinition="default 0",nullable = false)
 	private int createdBy;
 	
 	@Column(nullable = false)
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
 	private Date createdAt;
+	
+	@Column(nullable = false)
 	@UpdateTimestamp
     @Temporal(TemporalType.TIMESTAMP)
 	private Date modifiedAt;
+	
 	private String lastLogin;
 	
 	public int getId() {
