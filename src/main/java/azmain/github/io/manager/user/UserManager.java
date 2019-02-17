@@ -151,7 +151,9 @@ public class UserManager {
 		return responseBean;
 	}
 	
-	
+	public ResponseBean loginUser(HttpServletRequest httpServletRequest, EntityManagerFactory entiyEntityManagerFactory, UserBean userBean){
+		return new ResponseBean();
+	}
 	
 	
 }

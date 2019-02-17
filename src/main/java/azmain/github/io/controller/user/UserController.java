@@ -69,5 +69,10 @@ public class UserController {
 
     }
 
-	
+	@PostMapping("/login")
+    public ResponseBean userLogin(HttpServletRequest httpServletRequest, @RequestBody RequestBean requestBean){
+        return new UserManager().loginUser(httpServletRequest,
+                entityManagerFactory,
+                requestBean.getUserBean());
+    }
 }
