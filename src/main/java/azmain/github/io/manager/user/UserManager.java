@@ -10,6 +10,7 @@ import azmain.github.io.bean.network.ResponseBean;
 import azmain.github.io.bean.user.UserBean;
 import azmain.github.io.helper.PasswordHelper;
 import azmain.github.io.model.user.User;
+import org.springframework.orm.hibernate5.SessionFactoryUtils;
 
 import java.util.Date;
 import java.util.List;
@@ -152,7 +153,51 @@ public class UserManager {
 	}
 	
 	public ResponseBean loginUser(HttpServletRequest httpServletRequest, EntityManagerFactory entiyEntityManagerFactory, UserBean userBean){
-		return new ResponseBean();
+		ResponseBean responseBean = new ResponseBean();
+
+		SessionFactory sessionFactory = entiyEntityManagerFactory.unwrap(SessionFactory.class);
+		Session session = null;
+
+		try{
+           session = sessionFactory.openSession();
+           session.beginTransaction();
+
+           Query query = session.createNativeQuery("SELECT * from USER where email = :userEmail AND password = :password",User.class);
+           query.setParameter("userEmail",userBean.getEmail());
+           query.setParameter("password",PasswordHelper.encryptPassword(userBean.getPassword()));
+           List<User> userList = query.getResultList();
+
+           if(userList.size() == 0){
+               responseBean.setMsg("Your Email & Password doesn't match any account.");
+               responseBean.setCode(200);
+           }
+           else{
+               int isUserActive = userList.get(0).getIsApproved();
+               if(isUserActive == 0){
+                   responseBean.setCode(200);
+                   responseBean.setMsg("Your active is not active yet!");
+               }
+               else{
+                   UserBean responseUserBean = new UserBean();
+                   responseUserBean.setUsername(userList.get(0).getUsername());
+                   responseUserBean.setEmail(userList.get(0).getEmail());
+
+                   responseBean.setCode(200);
+                   responseBean.setMsg("Succesfully logged in.");
+                   responseBean.setObject(responseUserBean);
+               }
+           }
+        }
+        catch(Exception exp){
+		    responseBean.setCode(200);
+		    responseBean.setMsg(exp.getMessage());
+		    exp.printStackTrace();
+        }
+        finally {
+		    session.getTransaction().commit();
+		    session.close();
+        }
+	    return responseBean;
 	}
 	
 	
