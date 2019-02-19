@@ -131,7 +131,7 @@ public class UserManager {
 				
 				responseBean.setCode(200);
 				responseBean.setMsg("User Registration Completed. Please Verify Your Email.");
-				responseBean.setObject(new AuthBean(
+				responseBean.setData(new AuthBean(
 				        userBean.getToken(),
                         userBean.getUsername(),
                         userBean.getEmail(),
@@ -194,7 +194,7 @@ public class UserManager {
 
                    responseBean.setCode(200);
                    responseBean.setMsg("Successfully logged in.");
-                   responseBean.setObject(authBean);
+                   responseBean.setData(authBean);
                }
            }
         }

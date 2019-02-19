@@ -9,7 +9,7 @@ public class ResponseBean {
 	public String msg;
 	public int code;
 	public List<?> list;
-	public Object object;
+	public Object data;
 	
 	public UserBean userBean;
 
@@ -24,12 +24,12 @@ public class ResponseBean {
 		this.list = list;
 	}
 
-	public Object getObject() {
-		return object;
+	public Object getData() {
+		return data;
 	}
 
-	public void setObject(Object object) {
-		this.object = object;
+	public void setData(Object object) {
+		this.data = object;
 	}
 
 	public String getMsg() {
