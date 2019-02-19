@@ -30,8 +30,7 @@ public class UserController {
     public ResponseBean manage(@RequestBody RequestBean requestBean){
         return new UserManager().create(entityManagerFactory,requestBean);
     }
-    
-    @CrossOrigin(origins = "http://localhost:8080")
+
     @PostMapping("/registration")
     public ResponseBean registrationAttempt(HttpServletRequest httpServletRequest, @RequestBody RequestBean requestBean) {
 

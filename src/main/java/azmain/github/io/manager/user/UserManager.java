@@ -2,6 +2,7 @@ package azmain.github.io.manager.user;
 
 import javax.persistence.EntityManagerFactory;
 
+import azmain.github.io.bean.user.AuthBean;
 import org.hibernate.SessionFactory;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -130,6 +131,12 @@ public class UserManager {
 				
 				responseBean.setCode(200);
 				responseBean.setMsg("User Registration Completed. Please Verify Your Email.");
+				responseBean.setObject(new AuthBean(
+				        userBean.getToken(),
+                        userBean.getUsername(),
+                        userBean.getEmail(),
+                        userBean.getCreatedBy()
+                ));
 			}
 			else {
 				responseBean.setCode(200);
@@ -175,16 +182,19 @@ public class UserManager {
                int isUserActive = userList.get(0).getIsApproved();
                if(isUserActive == 0){
                    responseBean.setCode(200);
-                   responseBean.setMsg("Your active is not active yet!");
+                   responseBean.setMsg("Your account is not active yet!");
                }
                else{
-                   UserBean responseUserBean = new UserBean();
-                   responseUserBean.setUsername(userList.get(0).getUsername());
-                   responseUserBean.setEmail(userList.get(0).getEmail());
+
+                   AuthBean authBean = new AuthBean();
+                   authBean.setToken(userList.get(0).getToken());
+                   authBean.setUsername(userList.get(0).getUsername());
+                   authBean.setUsername(userList.get(0).getEmail());
+                   authBean.setUserid(userList.get(0).getId());
 
                    responseBean.setCode(200);
-                   responseBean.setMsg("Succesfully logged in.");
-                   responseBean.setObject(responseUserBean);
+                   responseBean.setMsg("Successfully logged in.");
+                   responseBean.setObject(authBean);
                }
            }
         }
