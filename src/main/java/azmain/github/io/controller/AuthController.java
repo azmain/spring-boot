@@ -1,5 +1,6 @@
 package azmain.github.io.controller;
 
+import azmain.github.io.domain.UserRegistration;
 import azmain.github.io.domain.auth.AuthRequest;
 import azmain.github.io.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,5 +22,10 @@ public class AuthController {
     @PostMapping(path = "login")
     public ResponseEntity<?> login(@RequestBody @Valid AuthRequest authRequest){
         return ResponseEntity.ok(authService.login(authRequest));
+    }
+
+    @PostMapping(path = "register")
+    public ResponseEntity<?> register(@RequestBody @Valid UserRegistration userRegistration){
+        return ResponseEntity.ok(authService.register(userRegistration));
     }
 }

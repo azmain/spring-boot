@@ -4,6 +4,7 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Size;
 import java.util.Collection;
+import java.util.List;
 
 @Entity
 @Table(name = SchemaConstant.USER_TABLE_NAME, uniqueConstraints = {
@@ -45,7 +46,7 @@ public class User {
             joinColumns = @JoinColumn(name = "USER_ID", referencedColumnName = "ID"),
             inverseJoinColumns = @JoinColumn(name = "ROLE_ID", referencedColumnName = "ID")
     )
-    private Collection<Role> roles;
+    private List<Role> roles;
 
     public long getId() {
         return id;
@@ -119,11 +120,11 @@ public class User {
         return this;
     }
 
-    public Collection<Role> getRoles() {
+    public List<Role> getRoles() {
         return roles;
     }
 
-    public User setRoles(Collection<Role> roles) {
+    public User setRoles(List<Role> roles) {
         this.roles = roles;
         return this;
     }
