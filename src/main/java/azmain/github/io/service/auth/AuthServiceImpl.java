@@ -1,15 +1,15 @@
-package azmain.github.io.service.impl;
+package azmain.github.io.service.auth;
 
 import azmain.github.io.domain.UserRegistration;
 import azmain.github.io.domain.auth.AuthRequest;
 import azmain.github.io.domain.auth.AuthResponse;
+import azmain.github.io.exception.MyCustomException;
 import azmain.github.io.repository.jpa.RoleRepository;
 import azmain.github.io.repository.jpa.UserRepository;
 import azmain.github.io.repository.schema.Role;
 import azmain.github.io.repository.schema.User;
 import azmain.github.io.security.CustomUserDetailsService;
 import azmain.github.io.security.JwtUtility;
-import azmain.github.io.service.AuthService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +23,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 
 @Service
 public class AuthServiceImpl implements AuthService {
@@ -64,8 +64,9 @@ public class AuthServiceImpl implements AuthService {
 
         final UserDetails userDetails = userDetailsService
                 .loadUserByUsername(authRequest.getUserNameOrEmail());
+        final User user = userDetailsService.getUserByUserName(authRequest.getUserNameOrEmail());
 
-        String jwt = jwtUtility.generateToken(userDetails);
+        String jwt = jwtUtility.generateTokenFromUser(user);
 
         return new AuthResponse(jwt);
 
@@ -75,13 +76,13 @@ public class AuthServiceImpl implements AuthService {
     @Transactional
     public String register(UserRegistration userRegistration) {
         if(userRepository.existsByUserName(userRegistration.getUserName())){
-            throw new RuntimeException("Username already exists.");
+            throw new MyCustomException("Username already exists.");
         }
         if(userRepository.existsByEmail(userRegistration.getEmail())){
-            throw new RuntimeException("Email already exists.");
+            throw new MyCustomException("Email already exists.");
         }
         if(!userRegistration.getPassword().equals(userRegistration.getConfirmPassword())){
-           throw new RuntimeException("Passwords don't match.");
+           throw new MyCustomException("Passwords don't match.");
         }
 
         Role role = roleRepository.findByRoleName("USER").orElse(null);
@@ -94,7 +95,7 @@ public class AuthServiceImpl implements AuthService {
                 .setName(userRegistration.getName())
                 .setEmail(userRegistration.getEmail())
                 .setPassword(passwordEncoder.encode(userRegistration.getPassword()))
-                .setRoles(Arrays.asList(role));
+                .setRoles(Collections.singletonList(role));
 
         userRepository.save(user);
         return "User created successfully.";

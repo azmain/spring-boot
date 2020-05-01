@@ -9,10 +9,9 @@ import springfox.documentation.builders.ParameterBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.schema.ModelRef;
-import springfox.documentation.service.ApiInfo;
-import springfox.documentation.service.ApiKey;
-import springfox.documentation.service.Contact;
+import springfox.documentation.service.*;
 import springfox.documentation.spi.DocumentationType;
+import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger.web.ApiKeyVehicle;
 import springfox.documentation.swagger.web.SecurityConfiguration;
@@ -20,6 +19,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 import static java.util.Collections.singletonList;
 
@@ -30,28 +30,30 @@ public class SwaggerConfiguration {
     @Bean
     public Docket api(){
         return new Docket(DocumentationType.SWAGGER_2)
-                .globalOperationParameters(singletonList(
-                        new ParameterBuilder()
-                                .name("Authorization")
-                                .modelRef(new ModelRef("string"))
-                                .parameterType("header")
-                                .required(false)
-                                .hidden(true)
-                                .defaultValue("Bearer " + "jwt")
-                                .build()
-                        )
-                )
+//                .globalOperationParameters(singletonList(
+//                        new ParameterBuilder()
+//                                .name("Authorization")
+//                                .modelRef(new ModelRef("string"))
+//                                .parameterType("header")
+//                                .required(false)
+//                                .hidden(true)
+//                                .defaultValue("Bearer " + "jwt")
+//                                .build()
+//                        )
+//                )
                 .groupName("Learn Spring Boot")
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("azmain.github"))
                 .paths(PathSelectors.any())
                 .build()
                 .apiInfo(apiDetails())
-                .securitySchemes(Arrays.asList(   // not working as expected
+                .securitySchemes(Collections.singletonList(
                         new ApiKey(
-                                "Bearer ",
-                                HttpHeaders.AUTHORIZATION,
-                                In.HEADER.name())));
+                                "APIKey",
+                                "Authorization",
+                                "header"))
+                )
+                .securityContexts(Collections.singletonList(securityContext()));
     }
 
     private ApiInfo apiDetails() {
@@ -62,9 +64,26 @@ public class SwaggerConfiguration {
                 "Free To Use",
                 new Contact("Nishan", "azmain.github.io","azmainnishan@gmail.com"),
                 "© API License",
-                "azmain.github.io",
+                "https://www.azmain.github.io",
                 Collections.emptyList()
         );
+    }
+
+    private SecurityContext securityContext() {
+        return SecurityContext
+                .builder()
+                .securityReferences(defaultAuth())
+                .forPaths(PathSelectors.regex("/.*"))
+                .build();
+    }
+
+    private List<SecurityReference> defaultAuth() {
+        final AuthorizationScope authorizationScope =
+                new AuthorizationScope("global", "accessEverything");
+        final AuthorizationScope[] authorizationScopes =
+                new AuthorizationScope[]{authorizationScope};
+        return Collections.singletonList(
+                new SecurityReference("APIKey", authorizationScopes));
     }
 
 }

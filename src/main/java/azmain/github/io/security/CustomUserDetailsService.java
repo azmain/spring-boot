@@ -43,4 +43,11 @@ public class CustomUserDetailsService implements UserDetailsService {
         }
         return authorities;
     }
+
+    public User getUserByUserName(String userNameOrEmail){
+        User user = userRepository.findByUserNameOrEmail(userNameOrEmail,userNameOrEmail)
+                .orElseThrow(()-> new UsernameNotFoundException("User not found with this username or email."));
+
+        return user;
+    }
 }

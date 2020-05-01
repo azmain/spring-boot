@@ -13,10 +13,7 @@ import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.io.StringReader;
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -38,7 +35,10 @@ public class CovidServiceImpl implements CovidService {
 
     @Override
     public List<CovidDailyDataReport> fetchCovidDailyDataReport() {
-        return this.dailyDataReports.values().stream().collect(Collectors.toList());
+        return this.dailyDataReports.values()
+                .stream()
+                .sorted(Comparator.comparing(CovidDailyDataReport::getTotalCases).reversed())
+                .collect(Collectors.toList());
     }
 
     @PostConstruct

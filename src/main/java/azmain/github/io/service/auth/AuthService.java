@@ -1,4 +1,4 @@
-package azmain.github.io.service;
+package azmain.github.io.service.auth;
 
 import azmain.github.io.domain.UserRegistration;
 import azmain.github.io.domain.auth.AuthRequest;

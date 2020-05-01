@@ -2,7 +2,7 @@ package azmain.github.io.controller;
 
 import azmain.github.io.domain.UserRegistration;
 import azmain.github.io.domain.auth.AuthRequest;
-import azmain.github.io.service.AuthService;
+import azmain.github.io.service.auth.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

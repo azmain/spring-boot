@@ -1,8 +1,10 @@
 package azmain.github.io.security;
 
+import azmain.github.io.repository.schema.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
@@ -15,10 +17,20 @@ import java.util.function.Function;
 @Component
 public class JwtUtility {
 
-    public String generateToken(UserDetails userDetails){
+    /** Generating Token */
+    public String generateTokenFromUserDetails(UserDetails userDetails){
         Map<String, Object> claims = new HashMap<>();
-        claims.put("roles", userDetails.getAuthorities());
+        claims.put("roles", userDetails.getAuthorities().stream().map(x->((GrantedAuthority) x).getAuthority()).toArray());
         return createToken(claims, userDetails.getUsername());
+    }
+
+    public String generateTokenFromUser(User user){
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("roles", user.getRoles().stream().map(x->x.getRoleName()).toArray());
+        claims.put("username", user.getUserName());
+        claims.put("email", user.getEmail());
+        claims.put("name", user.getName());
+        return createToken(claims, user.getUserName());
     }
 
     private String createToken(Map<String,Object> claims, String username) {
@@ -31,6 +43,7 @@ public class JwtUtility {
                 .compact();
     }
 
+    /** Validating Token & Extracting Claims */
     public String getUserNameFromToken(String token){
         return extractClaims(token, Claims::getSubject);
     }
