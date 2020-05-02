@@ -3,14 +3,13 @@ package azmain.github.io.repository.schema;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Size;
-import java.util.Collection;
 import java.util.List;
 
 @Entity
 @Table(name = SchemaConstant.USER_TABLE_NAME, uniqueConstraints = {
         @UniqueConstraint(columnNames = {"USER_NAME","EMAIL"})
 })
-public class User {
+public class UserEntity {
 
     @Id
     @Column(name = "ID")
@@ -52,7 +51,7 @@ public class User {
         return id;
     }
 
-    public User setId(long id) {
+    public UserEntity setId(long id) {
         this.id = id;
         return this;
     }
@@ -61,7 +60,7 @@ public class User {
         return name;
     }
 
-    public User setName(String name) {
+    public UserEntity setName(String name) {
         this.name = name;
         return this;
     }
@@ -70,7 +69,7 @@ public class User {
         return userName;
     }
 
-    public User setUserName(String userName) {
+    public UserEntity setUserName(String userName) {
         this.userName = userName;
         return this;
     }
@@ -79,7 +78,7 @@ public class User {
         return email;
     }
 
-    public User setEmail(String email) {
+    public UserEntity setEmail(String email) {
         this.email = email;
         return this;
     }
@@ -88,7 +87,7 @@ public class User {
         return password;
     }
 
-    public User setPassword(String password) {
+    public UserEntity setPassword(String password) {
         this.password = password;
         return this;
     }
@@ -97,7 +96,7 @@ public class User {
         return isActive;
     }
 
-    public User setActive(Boolean active) {
+    public UserEntity setActive(Boolean active) {
         isActive = active;
         return this;
     }
@@ -106,7 +105,7 @@ public class User {
         return isBlocked;
     }
 
-    public User setBlocked(Boolean blocked) {
+    public UserEntity setBlocked(Boolean blocked) {
         isBlocked = blocked;
         return this;
     }
@@ -115,7 +114,7 @@ public class User {
         return activationUrl;
     }
 
-    public User setActivationUrl(String activationUrl) {
+    public UserEntity setActivationUrl(String activationUrl) {
         this.activationUrl = activationUrl;
         return this;
     }
@@ -124,7 +123,7 @@ public class User {
         return roles;
     }
 
-    public User setRoles(List<Role> roles) {
+    public UserEntity setRoles(List<Role> roles) {
         this.roles = roles;
         return this;
     }

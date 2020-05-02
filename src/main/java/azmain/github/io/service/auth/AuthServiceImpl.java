@@ -7,7 +7,7 @@ import azmain.github.io.exception.MyCustomException;
 import azmain.github.io.repository.jpa.RoleRepository;
 import azmain.github.io.repository.jpa.UserRepository;
 import azmain.github.io.repository.schema.Role;
-import azmain.github.io.repository.schema.User;
+import azmain.github.io.repository.schema.UserEntity;
 import azmain.github.io.security.CustomUserDetailsService;
 import azmain.github.io.security.JwtUtility;
 import org.slf4j.Logger;
@@ -23,7 +23,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Arrays;
 import java.util.Collections;
 
 @Service
@@ -64,9 +63,9 @@ public class AuthServiceImpl implements AuthService {
 
         final UserDetails userDetails = userDetailsService
                 .loadUserByUsername(authRequest.getUserNameOrEmail());
-        final User user = userDetailsService.getUserByUserName(authRequest.getUserNameOrEmail());
+        final UserEntity userEntity = userDetailsService.getUserByUserName(authRequest.getUserNameOrEmail());
 
-        String jwt = jwtUtility.generateTokenFromUser(user);
+        String jwt = jwtUtility.generateTokenFromUser(userEntity);
 
         return new AuthResponse(jwt);
 
@@ -90,14 +89,14 @@ public class AuthServiceImpl implements AuthService {
             role = roleRepository.save(new Role().setRoleName("USER"));
         }
 
-        User user = new User()
+        UserEntity userEntity = new UserEntity()
                 .setUserName(userRegistration.getUserName())
                 .setName(userRegistration.getName())
                 .setEmail(userRegistration.getEmail())
                 .setPassword(passwordEncoder.encode(userRegistration.getPassword()))
                 .setRoles(Collections.singletonList(role));
 
-        userRepository.save(user);
-        return "User created successfully.";
+        userRepository.save(userEntity);
+        return "UserEntity created successfully.";
     }
 }

@@ -1,6 +1,6 @@
 package azmain.github.io.security;
 
-import azmain.github.io.repository.schema.User;
+import azmain.github.io.repository.schema.UserEntity;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -8,7 +8,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDate;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -24,13 +23,13 @@ public class JwtUtility {
         return createToken(claims, userDetails.getUsername());
     }
 
-    public String generateTokenFromUser(User user){
+    public String generateTokenFromUser(UserEntity userEntity){
         Map<String, Object> claims = new HashMap<>();
-        claims.put("roles", user.getRoles().stream().map(x->x.getRoleName()).toArray());
-        claims.put("username", user.getUserName());
-        claims.put("email", user.getEmail());
-        claims.put("name", user.getName());
-        return createToken(claims, user.getUserName());
+        claims.put("roles", userEntity.getRoles().stream().map(x->x.getRoleName()).toArray());
+        claims.put("username", userEntity.getUserName());
+        claims.put("email", userEntity.getEmail());
+        claims.put("name", userEntity.getName());
+        return createToken(claims, userEntity.getUserName());
     }
 
     private String createToken(Map<String,Object> claims, String username) {
