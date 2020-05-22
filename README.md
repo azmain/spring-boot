@@ -7,7 +7,7 @@ This is a java project using spring boot framework. It's a full REST API project
 	* I edited the properties to connect with mysql database
 	* Created Controller, Model, Bean, Manager in my project
 	
-	* Created user registration process, added cors header with the response in the controller through annotation
+	* Created userEntity registration process, added cors header with the response in the controller through annotation
 
 ## Controller ## 
 Controller accept all the requestes and return response.
